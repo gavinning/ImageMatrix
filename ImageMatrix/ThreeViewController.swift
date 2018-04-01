@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ThreeViewController.swift
 //  ImageMatrix
 //
 //  Created by gavinning on 2018/3/31.
@@ -8,16 +8,15 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-    var index: Int = 0
-
+class ThreeViewController: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         self.imageMatrix()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -27,13 +26,14 @@ class ViewController: UIViewController {
         let imageMatrix = ImageMatrix(frame: CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.width))
         imageMatrix.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1)
         
+        // 插入item
+        imageMatrix.items += self.createItems()
+
         // 设置间隔
         imageMatrix.spacing = 20
         // 设置列
         imageMatrix.column = 3
-        // 插入item
-        imageMatrix.items += self.createItems()
-
+        
         view.addSubview(imageMatrix)
     }
     
@@ -41,18 +41,11 @@ class ViewController: UIViewController {
         let label = UILabel()
         let item = ImageMaxtrixItem()
         
-        self.index += 1
-        let title = String(self.index)
-        
-        label.text = title
+        label.text = "Matrix"
         label.textColor = .green
         label.sizeToFit()
         item.addSubview(label)
-        item.backgroundColor = .lightGray
-        item.tag = self.index
-        
-        item.showDeleteIcon = true
-        
+        item.backgroundColor = .gray
         return item
     }
     

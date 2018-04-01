@@ -56,7 +56,6 @@ public class ImageMatrix: UIView {
             if !willAdd.isEmpty {
                 new.forEach { (item) in
                     if willAdd.contains(item) {
-                        // self.addSubview(item)
                         self.add(item: item)
                     }
                 }
@@ -83,14 +82,7 @@ public class ImageMatrix: UIView {
     // 并且强制启用 Constraint.both 约束条件
     // 建议在对齐网格模式启用 即 四宫格、九宫格、十六宫格
     // TODO 允许非自动布局功能后续版本完善
-    private private(set) var autoLayout: Bool = true {
-        didSet {
-            if autoLayout {
-                // self.constraint = .both
-                //self.layout()
-            }
-        }
-    }
+    private private(set) var autoLayout: Bool = true
     
     // 矩阵模型
     public var matrix: Matrix<ImageMaxtrixItem>!
@@ -109,6 +101,7 @@ public class ImageMatrix: UIView {
     
     // 新增元素
     private func add(item: ImageMaxtrixItem) {
+        item.alpha = 0
         self.addSubview(item)
     }
 
@@ -147,9 +140,10 @@ public class ImageMatrix: UIView {
             let offsetX: CGFloat = (spacing + constraintSize.width) * CGFloat(y)
             let offsetY: CGFloat = (spacing + constraintSize.height) * CGFloat(x)
 
+            item.frame.size = self.constraintSize
+            
             UIView.animate(withDuration: 0.5, animations: {
                 item.alpha = 1
-                item.frame.size = self.constraintSize
                 item.frame.origin = CGPoint(x: offsetX, y: offsetY)
             })
         }
@@ -170,7 +164,11 @@ public class ImageMatrix: UIView {
             })
             
             item.frame.size.width = constraintSize.width
-            item.frame.origin = CGPoint(x: offsetX, y: offsetY)
+            
+            UIView.animate(withDuration: 0.5, animations: {
+                item.alpha = 1
+                item.frame.origin = CGPoint(x: offsetX, y: offsetY)
+            })
         }
     }
     
@@ -189,7 +187,11 @@ public class ImageMatrix: UIView {
                 })
             
             item.frame.size.height = constraintSize.height
-            item.frame.origin = CGPoint(x: offsetX, y: offsetY)
+            
+            UIView.animate(withDuration: 0.5, animations: {
+                item.alpha = 1
+                item.frame.origin = CGPoint(x: offsetX, y: offsetY)
+            })
         }
     }
     

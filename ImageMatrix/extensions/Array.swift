@@ -74,4 +74,29 @@ public extension Array {
             return nil
         }
     }
+    
+    // 简单洗牌
+    public func shuffle() ->Array<Element> {
+        if self.count <= 1 {
+            return self
+        }
+        
+        var ran = 0
+        var arr = self
+        var random = arr
+        var map = Dictionary<Int,Bool>()
+        // 清空
+        random.removeAll()
+        // 随选
+        repeat {
+            ran = Int(arc4random())%Int(arr.count)
+            if map[ran] != true {
+                random.append(arr[ran])
+                arr.remove(at: ran)
+            }
+        }
+        while arr.count > 0
+        
+        return random
+    }
 }

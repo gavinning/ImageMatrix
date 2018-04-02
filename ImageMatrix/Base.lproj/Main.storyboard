@@ -20,43 +20,11 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="九宫格" id="xTw-UI-Sxt"/>
+                    <tabBarItem key="tabBarItem" title="九宫格" image="grid" id="xTw-UI-Sxt"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="935" y="-501"/>
-        </scene>
-        <!--瀑布流-->
-        <scene sceneID="kSr-Jg-mjY">
-            <objects>
-                <viewController id="58F-ua-aHm" customClass="FlowViewController" customModule="ImageMatrix" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="fX6-ZT-bdP">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="RZE-Qn-n2I"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="瀑布流" id="wxL-Ga-yRL"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KNC-e5-bbi" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="934" y="169"/>
-        </scene>
-        <!--水平线-->
-        <scene sceneID="EAm-V7-sSF">
-            <objects>
-                <viewController id="eSX-ri-I2k" customClass="ThreeViewController" customModule="ImageMatrix" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="dFO-Ua-dEZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="LJV-Cl-EwW"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="水平线" id="TjO-Zj-lKL"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6gt-gR-tbx" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="934" y="845"/>
+            <point key="canvasLocation" x="956" y="29"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="kZX-gg-GeS">
@@ -64,13 +32,12 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="H9M-iD-Yc1" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Kq8-EV-EHD">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="ghq-RD-ddS"/>
-                        <segue destination="58F-ua-aHm" kind="relationship" relationship="viewControllers" id="8IW-bb-vJY"/>
-                        <segue destination="eSX-ri-I2k" kind="relationship" relationship="viewControllers" id="hYg-AA-6J6"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rzv-9N-jd3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -78,4 +45,7 @@
             <point key="canvasLocation" x="21.600000000000001" y="29.23538230884558"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="grid" width="25" height="25"/>
+    </resources>
 </document>

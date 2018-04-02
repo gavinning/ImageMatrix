@@ -15,8 +15,6 @@
 		F009D86F206F6C7100D2339E /* ImageMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = F009D86E206F6C7100D2339E /* ImageMatrix.swift */; };
 		F009D874206F757600D2339E /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = F009D873206F757600D2339E /* Array.swift */; };
 		F009D876206F7E5300D2339E /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = F009D875206F7E5300D2339E /* Matrix.swift */; };
-		F009D878206FD78C00D2339E /* FlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F009D877206FD78C00D2339E /* FlowViewController.swift */; };
-		F009D87A206FD89A00D2339E /* ThreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F009D879206FD89A00D2339E /* ThreeViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,8 +28,6 @@
 		F009D86E206F6C7100D2339E /* ImageMatrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMatrix.swift; sourceTree = "<group>"; };
 		F009D873206F757600D2339E /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		F009D875206F7E5300D2339E /* Matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matrix.swift; sourceTree = "<group>"; };
-		F009D877206FD78C00D2339E /* FlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowViewController.swift; sourceTree = "<group>"; };
-		F009D879206FD89A00D2339E /* ThreeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,8 +64,6 @@
 				F009D870206F6FA000D2339E /* extensions */,
 				F009D85B206F6C0A00D2339E /* AppDelegate.swift */,
 				F009D85D206F6C0A00D2339E /* ViewController.swift */,
-				F009D877206FD78C00D2339E /* FlowViewController.swift */,
-				F009D879206FD89A00D2339E /* ThreeViewController.swift */,
 				F009D85F206F6C0A00D2339E /* Main.storyboard */,
 				F009D862206F6C0B00D2339E /* Assets.xcassets */,
 				F009D864206F6C0B00D2339E /* LaunchScreen.storyboard */,
@@ -166,10 +160,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F009D87A206FD89A00D2339E /* ThreeViewController.swift in Sources */,
 				F009D85E206F6C0A00D2339E /* ViewController.swift in Sources */,
 				F009D876206F7E5300D2339E /* Matrix.swift in Sources */,
-				F009D878206FD78C00D2339E /* FlowViewController.swift in Sources */,
 				F009D874206F757600D2339E /* Array.swift in Sources */,
 				F009D85C206F6C0A00D2339E /* AppDelegate.swift in Sources */,
 				F009D86F206F6C7100D2339E /* ImageMatrix.swift in Sources */,

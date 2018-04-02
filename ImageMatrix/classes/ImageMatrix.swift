@@ -31,6 +31,8 @@ public class ImageMatrix: UIView {
     }
     
     // 矩阵节点
+    // 此数组的更改会反馈到UI上
+    // 也就是说只需要操作该数组即可达到对矩阵增删操作
     public var items = Array<ImageMaxtrixItem>() {
         didSet {
             
@@ -84,8 +86,8 @@ public class ImageMatrix: UIView {
     // TODO 允许非自动布局功能后续版本完善
     private private(set) var autoLayout: Bool = true
     
-    // 矩阵模型
-    public var matrix: Matrix<ImageMaxtrixItem>!
+    // 矩阵模型 用于计算图片矩阵的位置
+    private var matrix: Matrix<ImageMaxtrixItem>!
     
     
     public required init?(coder aDecoder: NSCoder) {
@@ -94,9 +96,7 @@ public class ImageMatrix: UIView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        
         self.layout()
-        self.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05)
     }
     
     // 新增元素
@@ -112,6 +112,7 @@ public class ImageMatrix: UIView {
         }
     }
     
+    // 重新布局
     private func layout() {
         guard items.count > 0 else {
             return
@@ -130,11 +131,13 @@ public class ImageMatrix: UIView {
         }
     }
     
+    // 启用自动布局时计算约束宽高
     private func AutoLayout() -> CGSize {
         let width = (self.frame.width - CGFloat(column-1) * spacing)/CGFloat(column)
         return CGSize(width: width, height: width)
     }
     
+    // constraint.both 情况下的布局计算
     private func rockByBoth() {
         matrix.each { (x, y, item) in
             let offsetX: CGFloat = (spacing + constraintSize.width) * CGFloat(y)
@@ -149,6 +152,7 @@ public class ImageMatrix: UIView {
         }
     }
     
+    // constraint.width 情况下的布局计算
     private func rockByWidth() {
         matrix.each { (x, y, item) in
             let offsetX: CGFloat = (spacing + constraintSize.width) * CGFloat(x)
@@ -172,6 +176,7 @@ public class ImageMatrix: UIView {
         }
     }
     
+    // constraint.height 情况下的布局计算
     private func rockByHeight() {
         matrix.each { (x, y, item) in
             var offsetX: CGFloat = 0
@@ -195,24 +200,25 @@ public class ImageMatrix: UIView {
         }
     }
     
+    // constraint.freedom 情况下的布局计算
     private func rockByFreedom() {
-        matrix.each { (row, column, item) in
+        matrix.each { (x, y, item) in
             var offsetX: CGFloat = 0
             var offsetY: CGFloat = 0
             
             // 获取row数组
-            matrix.get(row: row)
+            matrix.get(row: y)
                 // 截断之前的item
-                .slice(0, row)
+                .slice(0, x)
                 // 计算偏移
                 .forEach({ (item) in
                     offsetX += (item.frame.width + spacing)
                 })
             
             // 获取column数组
-            matrix.get(column: column)
+            matrix.get(column: x)
                 // 截断之前的item
-                .slice(0, column)
+                .slice(0, y)
                 // 计算偏移
                 .forEach({ (item) in
                     offsetY += (item.frame.height + spacing)
@@ -229,6 +235,7 @@ public class ImageMaxtrixItem: UIView {
     
     public override var frame: CGRect {
         didSet {
+            self.didLayout?()
             self.layout()
         }
     }
@@ -243,7 +250,7 @@ public class ImageMaxtrixItem: UIView {
     }()
     
     // 显示删除按钮
-    var showDeleteIcon: Bool = false {
+    public var showDeleteIcon: Bool = false {
         didSet {
             showDeleteIcon ?
                 self.addSubview(deleteIcon):
@@ -251,27 +258,34 @@ public class ImageMaxtrixItem: UIView {
         }
     }
     
+    // 重新渲染之后触发
+    public var didLayout: (() -> Void)?
+
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    public convenience init() {
+        self.init(frame: CGRect())
+        // 溢出隐藏
+        self.clipsToBounds = true
+    }
+    
     private func layout() {
         // 更新deleteIcon的位置
         deleteIcon.frame.origin.x = frame.width - deleteIcon.frame.width
+        self.bringSubview(toFront: deleteIcon)
     }
     
-//    public required init?(coder aDecoder: NSCoder) {
-//        super.init(coder: aDecoder)
-//    }
-//    
-//    public override init(frame: CGRect) {
-//        super.init(frame: frame)
-//    }
-//    
-//    public convenience init() {
-//        self.init(frame: CGRect())
-//    }
-    
-    @objc func deleteItem() {
+    // 从父级Matrix视图删除自身
+    @objc private func deleteItem() {
         if let parent = self.superview as? ImageMatrix {
-            parent.items.remove(of: self)
-//            print(parent.matrix.model)
+            let _ = parent.items.remove(of: self)
         }
     }
     

@@ -39,7 +39,7 @@ public struct Matrix<T: Equatable> {
     
     // @columns 矩阵列数
     // @items   矩阵元素数组
-    public init(columns: Int, items: Array<T>) {
+    public init(columns: Int = 0, items: Array<T> = Array<T>()) {
         self.items = items
         self.columns = columns
         self.layout()
@@ -54,7 +54,7 @@ public struct Matrix<T: Equatable> {
             repeat {
                 self.grid.append(items.slicing(0, self.columns))
             }
-            while items.count > self.columns
+                while items.count > self.columns
         }
         
         // 检查余数
@@ -77,8 +77,10 @@ public struct Matrix<T: Equatable> {
     
     // 遍历矩阵中的元素
     public func each(_ callback: (Int, Int, T) -> ()) {
-        for (x, items) in grid.enumerated() {
-            for (y, item) in items.enumerated() {
+        // 第一组循环row, y
+        for (y, items) in grid.enumerated() {
+            // 第二组循环column, x
+            for (x, item) in items.enumerated() {
                 callback(x, y, item)
             }
         }
@@ -87,7 +89,7 @@ public struct Matrix<T: Equatable> {
     // 查询 row
     // @row Y轴坐标对应的数组为行
     public func get(row: Int) -> Array<T> {
-        return grid[row]
+        return row < grid.count ? grid[row] : Array<T>()
     }
     
     // 查询 column

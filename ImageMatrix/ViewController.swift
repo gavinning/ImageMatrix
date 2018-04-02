@@ -49,7 +49,8 @@ class ViewController: UIViewController {
     
     func imageMatrix() {
         self.matrix = ImageMatrix(frame: CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.width))
-        self.matrix.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05)
+        self.matrix.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.2)
+        self.matrix.delegate = self
         
         // 设置间隔
         self.matrix.spacing = 20
@@ -61,10 +62,11 @@ class ViewController: UIViewController {
         view.addSubview(self.matrix)
     }
     
-    func createItem() -> ImageMaxtrixItem {
-        let item = ImageMaxtrixItem()
+    func createItem() -> ImageMatrixItem {
+        let item = ImageMatrixItem()
         let imageView = UIImageView()
-
+        
+        item.delegate = self
         
         self.index += 1
         
@@ -79,9 +81,36 @@ class ViewController: UIViewController {
         
         item.showDeleteIcon = true
         item.addSubview(imageView)
+
+        return item
+    }
+    
+    func createItems() -> Array<ImageMatrixItem> {
+        var arr = Array<ImageMatrixItem>()
         
-        item.didLayout = {
-           
+        for _ in 0..<9 {
+            arr.append(self.createItem())
+        }
+        return arr
+    }
+}
+
+extension UIViewController: ImageMatrixDelegate {
+    // 当矩阵内新增item时
+    func imageMatrix(imageMatrix: ImageMatrix, didAdded item: ImageMatrixItem) {
+        imageMatrix.sizeToFit(by: .height)
+    }
+    
+    // 当矩阵内的item被删除时
+    func imageMatrix(imageMatrix: ImageMatrix, didRemoved item: ImageMatrixItem) {
+        imageMatrix.sizeToFit(by: .height)
+    }
+}
+
+extension UIViewController: ImageMatrixItemDelegate {
+    // item 布局发生改变时
+    public func imageMatrixItem(didLayout item: ImageMatrixItem) {
+        if let imageView = item.subviews[0] as? UIImageView {
             // 同比缩放
             let width = imageView.frame.width
             let height = imageView.frame.height
@@ -92,23 +121,11 @@ class ViewController: UIViewController {
                 imageView.frame.size.height = item.frame.height
                 imageView.center = CGPoint(x: item.frame.width/2, y: item.frame.height/2)
             }
-            // 竖图
+                // 竖图
             else {
                 imageView.frame.size.width = item.frame.width
                 imageView.frame.size.height = item.frame.width/width*height
             }
         }
-        
-        return item
-    }
-    
-    func createItems() -> Array<ImageMaxtrixItem> {
-        var arr = Array<ImageMaxtrixItem>()
-        
-        for _ in 0..<9 {
-            arr.append(self.createItem())
-        }
-        return arr
     }
 }
-

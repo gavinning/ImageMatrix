@@ -1,10 +1,15 @@
 ImageMatrix
 ---
-图片矩阵，当然也可以做其他UI矩阵  
+j-图片矩阵，当然也可以做其他UI矩阵  
   
-  
+
 ![](imageMatrix.gif)
 
+  
+
+### Requirements
+* iOS 10.0+
+* Swift 4.0+
 
 ### Usage
 ```swift

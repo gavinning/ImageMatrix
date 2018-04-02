@@ -11,14 +11,14 @@ ImageMatrix
 let imageMatrix = ImageMatrix(frame: CGRect(x: 0, y: 50, width: 375, height: 375))
 
 // 设置间隔
-self.matrix.spacing = 20
+imageMatrix.spacing = 20
 // 设置列 2为4宫格 3为9宫格
-self.matrix.column = 3
+imageMatrix.column = 3
 
 // items属性对应矩阵内的UIView
 // 对items执行增删操作，即会反应到UI上
 // 在UI上的增删实际也是对该数组的增删
-self.matrix.items = [ImageMaxtrixItem(), ImageMaxtrixItem()]
+imageMatrix.items = [ImageMaxtrixItem(), ImageMaxtrixItem()]
 
 self.view.addSubview(imageMatrix)
 ```

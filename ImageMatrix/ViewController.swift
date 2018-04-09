@@ -17,13 +17,13 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         
-        let btn = UIButton(frame: CGRect(x: 30, y: 450, width: 100, height: 30))
+        let btn = UIButton(frame: CGRect(x: 30, y: 30, width: 100, height: 30))
         btn.setTitle("新增", for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1)
         btn.addTarget(self, action: #selector(addItem), for: .touchUpInside)
         
-        let btn2 = UIButton(frame: CGRect(x: 150, y: 450, width: 100, height: 30))
+        let btn2 = UIButton(frame: CGRect(x: 150, y: 30, width: 100, height: 30))
         btn2.setTitle("改变", for: .normal)
         btn2.setTitleColor(.black, for: .normal)
         btn2.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1)
@@ -48,7 +48,7 @@ class ViewController: UIViewController {
     }
     
     func imageMatrix() {
-        self.matrix = ImageMatrix(frame: CGRect(x: 0, y: 50, width: view.frame.width, height: view.frame.width))
+        self.matrix = ImageMatrix(frame: CGRect(x: 0, y: 80, width: view.frame.width, height: 0))
         self.matrix.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.2)
         self.matrix.delegate = self
         
@@ -88,7 +88,7 @@ class ViewController: UIViewController {
     func createItems() -> Array<ImageMatrixItem> {
         var arr = Array<ImageMatrixItem>()
         
-        for _ in 0..<9 {
+        for _ in 0..<5 {
             arr.append(self.createItem())
         }
         return arr
@@ -99,6 +99,7 @@ extension UIViewController: ImageMatrixDelegate {
     // 当矩阵内新增item时
     func imageMatrix(imageMatrix: ImageMatrix, didAdded item: ImageMatrixItem) {
         imageMatrix.sizeToFit(by: .height)
+        print(imageMatrix.frame.height)
     }
     
     // 当矩阵内的item被删除时

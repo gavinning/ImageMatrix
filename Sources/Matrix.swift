@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GLEKit
 
 public struct Matrix<T: Equatable> {
     // 矩阵元素
@@ -52,7 +53,7 @@ public struct Matrix<T: Equatable> {
         if items.count > columns {
             // 分割数组
             repeat {
-                self.grid.append(items.slicing(0, self.columns))
+                self.grid.append(items.remove(range: 0..<self.columns)!)
             }
                 while items.count > self.columns
         }

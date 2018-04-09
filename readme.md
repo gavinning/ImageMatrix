@@ -6,6 +6,14 @@ ImageMatrix
 ![](imageMatrix.gif)
 
   
+### Install
+```sh
+// => Podfile
+pod 'ImageMatrix'
+```
+```sh
+pod install
+```
 
 ### Requirements
 * iOS 10.0+
@@ -24,6 +32,9 @@ imageMatrix.column = 3
 // 对items执行增删操作，即会反应到UI上
 // 在UI上的增删实际也是对该数组的增删
 imageMatrix.items = [ImageMatrixItem(), ImageMatrixItem()]
+
+// 关闭动画 默认为true
+imageMatrix.isAnimate = false
 
 self.view.addSubview(imageMatrix)
 ```

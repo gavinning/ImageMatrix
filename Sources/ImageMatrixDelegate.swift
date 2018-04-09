@@ -20,13 +20,3 @@ import UIKit
     // 子元素被删除
     @objc optional func imageMatrix(imageMatrix: ImageMatrix, didRemoved item: ImageMatrixItem)
 }
-
-@objc public protocol ImageMatrixItemDelegate {
-    
-    // 布局发生改变后
-    @objc optional func imageMatrixItem(didLayout item: ImageMatrixItem)
-    
-    // 被删除时
-    @objc optional func imageMatrixItem(didRemoved item: ImageMatrixItem)
-}
-

@@ -1,0 +1,6 @@
+framework module GLEKit {
+  umbrella header "GLEKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

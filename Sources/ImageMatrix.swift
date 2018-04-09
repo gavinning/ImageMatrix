@@ -11,12 +11,25 @@ import UIKit
 public class ImageMatrix: UIView {
     var delegate: ImageMatrixDelegate?
     
+    // 是否开启动画
+    public var isAnimate: Bool = true
+    // 新入场Item不施加位移动画
+    private var immunityMap: Dictionary<ImageMatrixItem, Bool> = [:]
+
+    // 动画时间
+    // item删除动画时间
+    private let deleteTime = 0.3
+    // 矩阵resize动画时间
+    private let resizeTime = 0.3
+    // item位移动画时间
+    private let displaceTime = 0.4
+    
+    
     // 宽高约束
     public enum Constraint {
         case both
         case width
         case height
-        case freedom
     }
     
     // item减少时重新计算矩阵所占空间
@@ -112,15 +125,8 @@ public class ImageMatrix: UIView {
     
     // 已使用空间
     private var usedSpace = CGSize()
+
     
-    
-    // 动画时间
-    // item删除动画时间
-    private let deleteTime = 0.3
-    // 矩阵resize动画时间
-    private let resizeTime = 0.3
-    // item位移动画时间
-    private let displaceTime = 0.4
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -128,9 +134,7 @@ public class ImageMatrix: UIView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        // 溢出隐藏
         self.clipsToBounds = true
-        self.layout()
     }
     
     public override func sizeToFit() {
@@ -170,7 +174,17 @@ public class ImageMatrix: UIView {
         usedSpace.width = width.max()! + CGFloat([self.column-1, 0].max()!)*spacing
         usedSpace.height = height.max()! + CGFloat([self.row-1, 0].max()!)*spacing
         
-        UIView.animate(withDuration: resizeTime) {
+        if isAnimate {
+            UIView.animate(withDuration: resizeTime) {
+                switch resize {
+                case .both: self.frame.size = self.usedSpace
+                case .width: self.frame.size.width = self.usedSpace.width
+                case .height: self.frame.size.height = self.usedSpace.height
+                }
+            }
+        }
+        
+        else {
             switch resize {
             case .both: self.frame.size = self.usedSpace
             case .width: self.frame.size.width = self.usedSpace.width
@@ -183,14 +197,15 @@ public class ImageMatrix: UIView {
     private func add(item: ImageMatrixItem) {
         item.alpha = 0
         self.addSubview(item)
-        UIView.animate(withDuration: displaceTime, animations: {}) { (complete) in
-            self.delegate?.imageMatrix?(imageMatrix: self, didAdded: item)
+        self.delegate?.imageMatrix?(imageMatrix: self, didAdded: item)
+        UIView.animate(withDuration: isAnimate ? deleteTime : 0) {
+            item.alpha = 1
         }
     }
     
     // 删除元素
     private func remove(item: ImageMatrixItem) {
-        UIView.animate(withDuration: deleteTime, animations: { item.alpha = 0 }) { (completed) in
+        UIView.animate(withDuration: isAnimate ? deleteTime : 0, animations: { item.alpha = 0 }) { (completed) in
             item.removeFromSuperview()
             self.delegate?.imageMatrix?(imageMatrix: self, didRemoved: item)
         }
@@ -211,8 +226,9 @@ public class ImageMatrix: UIView {
         case .both: self.rockByBoth()
         case .width: self.rockByWidth()
         case .height: self.rockByHeight()
-        case .freedom: self.rockByFreedom()
         }
+        
+        self.sizeToFit(by: .height)
     }
     
     // 启用自动布局时计算约束宽高
@@ -229,10 +245,16 @@ public class ImageMatrix: UIView {
             
             item.frame.size = self.constraintSize
             
-            UIView.animate(withDuration: displaceTime, animations: {
-                item.alpha = 1
+            // 新增Item不施加位移动画
+            if immunityMap[item] == nil {
+                immunityMap[item] = true
                 item.frame.origin = CGPoint(x: offsetX, y: offsetY)
-            })
+            }
+            else {
+                UIView.animate(withDuration: isAnimate ? displaceTime : 0, animations: {
+                    item.frame.origin = CGPoint(x: offsetX, y: offsetY)
+                })
+            }
         }
     }
     
@@ -245,18 +267,14 @@ public class ImageMatrix: UIView {
             // 查询X轴坐标为x的列数组
             matrix.get(column: x)
                 // 截断y坐标之前的item
-                .slice(0, y)
+                .sliced(of: 0..<y)?
                 // 计算偏移
                 .forEach({ (item) in
                     offsetY += (item.frame.height + spacing)
                 })
             
             item.frame.size.width = constraintSize.width
-            
-            UIView.animate(withDuration: displaceTime, animations: {
-                item.alpha = 1
-                item.frame.origin = CGPoint(x: offsetX, y: offsetY)
-            })
+            item.frame.origin = CGPoint(x: offsetX, y: offsetY)
         }
     }
     
@@ -269,138 +287,15 @@ public class ImageMatrix: UIView {
             // 查询Y轴坐标为y的行
             matrix.get(row: y)
                 // 截断x坐标之前的item
-                .slice(0, x)
+                .sliced(of: 0..<x)?
                 // 计算偏移
                 .forEach({ (item) in
                     offsetX += (item.frame.width + spacing)
                 })
             
             item.frame.size.height = constraintSize.height
-            
-            UIView.animate(withDuration: displaceTime, animations: {
-                item.alpha = 1
-                item.frame.origin = CGPoint(x: offsetX, y: offsetY)
-            })
-        }
-    }
-    
-    // constraint.freedom 情况下的布局计算
-    private func rockByFreedom() {
-        matrix.each { (x, y, item) in
-            var offsetX: CGFloat = 0
-            var offsetY: CGFloat = 0
-            
-            // 获取row数组
-            matrix.get(row: y)
-                // 截断之前的item
-                .slice(0, x)
-                // 计算偏移
-                .forEach({ (item) in
-                    offsetX += (item.frame.width + spacing)
-                })
-            
-            // 获取column数组
-            matrix.get(column: x)
-                // 截断之前的item
-                .slice(0, y)
-                // 计算偏移
-                .forEach({ (item) in
-                    offsetY += (item.frame.height + spacing)
-                })
-            
-            UIView.animate(withDuration: displaceTime, animations: {
-                item.alpha = 1
-                item.frame.origin = CGPoint(x: offsetX, y: offsetY)
-            })
+            item.frame.origin = CGPoint(x: offsetX, y: offsetY)
         }
     }
 }
 
-public class ImageMatrixItem: UIView {
-    //    var tmpCenter = CGPoint(x: 0, y: 0)
-    //    var tmpSize = CGSize(width: 0, height: 0)
-    
-    var delegate: ImageMatrixItemDelegate?
-    
-    public override var frame: CGRect {
-        didSet {
-            delegate?.imageMatrixItem?(didLayout: self)
-            self.layout()
-        }
-    }
-    
-    private lazy var deleteIcon: UIButton = {
-        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-        btn.setImage(UIImage(named: "icon-close-white"), for: .normal)
-        btn.contentEdgeInsets = UIEdgeInsets(top: 6, left: 14, bottom: 14, right: 6)
-        
-        btn.addTarget(self, action: #selector(self.deleteItem), for: .touchUpInside)
-        return btn
-    }()
-    
-    // 显示删除按钮
-    public var showDeleteIcon: Bool = false {
-        didSet {
-            showDeleteIcon ?
-                self.addSubview(deleteIcon):
-                deleteIcon.removeFromSuperview()
-        }
-    }
-    
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        // 溢出隐藏
-        self.clipsToBounds = true
-        self.layout()
-    }
-    
-    public convenience init() {
-        self.init(frame: CGRect())
-    }
-    
-    public override func addSubview(_ view: UIView) {
-        super.addSubview(view)
-        // 删除按钮层级提升
-        if showDeleteIcon {
-            self.bringSubview(toFront: deleteIcon)
-        }
-    }
-    
-    private func layout() {
-        // 更新deleteIcon的位置
-        deleteIcon.frame.origin.x = frame.width - deleteIcon.frame.width
-        // 删除按钮层级提升
-        if showDeleteIcon {
-            self.bringSubview(toFront: deleteIcon)
-        }
-    }
-    
-    // 从父级Matrix视图删除自身
-    @objc private func deleteItem() {
-        if let parent = self.superview as? ImageMatrix {
-            let _ = parent.items.remove(of: self)
-            delegate?.imageMatrixItem?(didRemoved: self)
-        }
-    }
-    
-    //    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-    //        self.tmpCenter = self.center
-    //        self.tmpSize = self.frame.size
-    //        UIView.animate(withDuration: 0.15, animations: { () -> Void in
-    //            self.frame.size = CGSize(width: self.frame.size.width*0.95, height: self.frame.size.height*0.95)
-    //            self.center = self.tmpCenter
-    //        })
-    //    }
-    //
-    //    override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-    //        UIView.animate(withDuration: 0.15, animations: { () -> Void in
-    //            self.backgroundColor = .gray
-    //            self.frame.size = self.tmpSize
-    //            self.center = self.tmpCenter
-    //        })
-    //    }
-}

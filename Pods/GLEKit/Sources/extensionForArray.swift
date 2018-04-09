@@ -1,11 +1,3 @@
-//
-//  Array.swift
-//  ImageMatrix
-//
-//  Created by gavinning on 2018/3/31.
-//  Copyright © 2018年 gavinning. All rights reserved.
-//
-
 import UIKit
 
 public extension Array {
@@ -18,7 +10,7 @@ public extension Array {
         if arr.count > column {
             // 分割数组为矩阵
             repeat {
-                matrix.append(arr.slicing(0, column))
+                matrix.append(arr.remove(range: 0..<column)!)
             }
             while arr.count > column
         }
@@ -30,32 +22,38 @@ public extension Array {
         return matrix
     }
     
-    public func slice(_ start: Int, _ end: Int) -> [Element] {
-        return Array(self[start..<end])
+    // 截取区间 改变自身
+    public mutating func slice(of range: Range<Int>) {
+        self = self.sliced(of: range)!
     }
     
-    public func slice(_ start: Int, distance: Int) -> [Element] {
-        return self.slice(start, self.index(start, offsetBy: distance))
+    // 截取区间 改变自身
+    public mutating func slice(start: Int, length: Int) {
+        self.slice(of: start..<self.index(start, offsetBy: length))
     }
     
-    public mutating func slicing(_ start: Int, _ end: Int) -> [Element] {
-        let result = Array(self[start..<end])
-        self.removeSubrange(start..<end)
-        return result
+    // 截取区间 不改变自身
+    public func sliced(of range: Range<Int>) -> [Element]? {
+        return Array(self[range])
     }
 
-    public mutating func slicing(_ start: Int, distance: Int) -> [Element] {
-        return self.slicing(start, self.index(start, offsetBy: distance))
+    // 截取区间 不改变自身
+    public func sliced(start: Int, length: Int) -> [Element]? {
+        return self.sliced(of: start..<self.index(start, offsetBy: length))
     }
     
-    public mutating func splice(_ start: Int, _ end: Int) -> [Element] {
-        return self.slicing(start, end)
+    // 某些场景需要数组删除改变自身，并且返回删除的区间
+    // 例如上面的matrix方法就是这样的应用场景
+    public mutating func remove(range: Range<Int>) -> [Element]? {
+        let ret = self.sliced(of: range)
+        self.removeSubrange(range)
+        return ret
     }
     
-    public mutating func splice(_ start: Int, distance: Int) -> [Element] {
-        return self.slicing(start, distance)
-    }
+    // 不需要 removed(range)
+    // self.sliced(of range) 完全可以的达到这个目的
     
+    // 查找指定的元素索引
     public mutating func index<T: Equatable>(of element: T) -> Int? {
         for (index, item) in self.enumerated() {
             if let item = item as? T, item == element {
@@ -65,6 +63,7 @@ public extension Array {
         return nil
     }
     
+    // 删除指定的元素
     public mutating func remove<T: Equatable>(of element: T) -> T? {
         let index = self.index(of: element)
         if let index = index {
@@ -95,7 +94,7 @@ public extension Array {
                 arr.remove(at: ran)
             }
         }
-        while arr.count > 0
+            while arr.count > 0
         
         return random
     }

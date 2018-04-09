@@ -9,13 +9,13 @@
 import UIKit
 
 public class ImageMatrix: UIView {
-    var delegate: ImageMatrixDelegate?
+    public var delegate: ImageMatrixDelegate?
     
     // 是否开启动画
     public var isAnimate: Bool = true
     // 新入场Item不施加位移动画
     private var immunityMap: Dictionary<ImageMatrixItem, Bool> = [:]
-
+    
     // 动画时间
     // item删除动画时间
     private let deleteTime = 0.3
@@ -37,6 +37,12 @@ public class ImageMatrix: UIView {
         case both
         case width
         case height
+    }
+    
+    // 子视图更新事件
+    @objc public enum Event: Int {
+        case add
+        case remove
     }
     
     public override var frame: CGRect {
@@ -125,7 +131,7 @@ public class ImageMatrix: UIView {
     
     // 已使用空间
     private var usedSpace = CGSize()
-
+    
     
     
     public required init?(coder aDecoder: NSCoder) {
@@ -183,7 +189,7 @@ public class ImageMatrix: UIView {
                 }
             }
         }
-        
+            
         else {
             switch resize {
             case .both: self.frame.size = self.usedSpace
@@ -198,6 +204,7 @@ public class ImageMatrix: UIView {
         item.alpha = 0
         self.addSubview(item)
         self.delegate?.imageMatrix?(imageMatrix: self, didAdded: item)
+        self.delegate?.imageMatrix?(imageMatrix: self, didChanged: item, event: .add)
         UIView.animate(withDuration: isAnimate ? deleteTime : 0) {
             item.alpha = 1
         }
@@ -208,6 +215,7 @@ public class ImageMatrix: UIView {
         UIView.animate(withDuration: isAnimate ? deleteTime : 0, animations: { item.alpha = 0 }) { (completed) in
             item.removeFromSuperview()
             self.delegate?.imageMatrix?(imageMatrix: self, didRemoved: item)
+            self.delegate?.imageMatrix?(imageMatrix: self, didChanged: item, event: .remove)
         }
     }
     

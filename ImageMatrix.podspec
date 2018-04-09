@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "ImageMatrix"
-  s.version      = "0.2.1"
+  s.version      = "0.2.2"
   s.summary      = "简单的图片矩阵."
   s.homepage     = "https://github.com/gavinning/ImageMatrix"
   s.license      = "MIT"

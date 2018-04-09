@@ -97,13 +97,13 @@ class ViewController: UIViewController {
 
 extension UIViewController: ImageMatrixDelegate {
     // 当矩阵内新增item时
-    func imageMatrix(imageMatrix: ImageMatrix, didAdded item: ImageMatrixItem) {
+    public func imageMatrix(imageMatrix: ImageMatrix, didAdded item: ImageMatrixItem) {
         imageMatrix.sizeToFit(by: .height)
         print(imageMatrix.frame.height)
     }
     
     // 当矩阵内的item被删除时
-    func imageMatrix(imageMatrix: ImageMatrix, didRemoved item: ImageMatrixItem) {
+    public func imageMatrix(imageMatrix: ImageMatrix, didRemoved item: ImageMatrixItem) {
         imageMatrix.sizeToFit(by: .height)
     }
 }

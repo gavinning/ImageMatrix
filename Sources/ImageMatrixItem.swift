@@ -12,7 +12,7 @@ public class ImageMatrixItem: UIView {
     //    var tmpCenter = CGPoint(x: 0, y: 0)
     //    var tmpSize = CGSize(width: 0, height: 0)
     
-    var delegate: ImageMatrixItemDelegate?
+    public var delegate: ImageMatrixItemDelegate?
     
     public override var frame: CGRect {
         didSet {
